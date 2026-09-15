@@ -72,6 +72,12 @@ public class UserService {
         return new UserDto(savedUser.getId(), savedUser.getName(), savedUser.getEmail());
     }
 
+    // Get user by email id
+    public User getUserByEmail(String email) {
+
+        return userRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + email));
+    }
+
     // Replaces the existing user's data.
     @Transactional
     public UserDto updateUser(Long id, CreateUserDto updateUserDto) {
