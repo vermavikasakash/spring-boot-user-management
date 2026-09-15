@@ -11,9 +11,21 @@ public class CreateUserDto {
     @Email(message = "Invalid email")
     String email;
 
-    public CreateUserDto(String name, String email) {
+    @NotBlank(message = "Password is required")
+    private String password;
+
+    public CreateUserDto(String name, String email, String password) {
         this.name = name;
         this.email = email;
+        this.password = password;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getName() {

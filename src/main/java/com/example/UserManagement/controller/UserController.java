@@ -6,12 +6,11 @@ import com.example.UserManagement.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/v1/users")
 public class UserController {
 
     private final UserService userService;
@@ -41,16 +40,6 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getUserById(id));
-    }
-
-    // POST /users
-    // Creates a new user and returns HTTP 201 Created.
-    @PostMapping
-    public ResponseEntity<UserDto> createUser(@Valid @RequestBody CreateUserDto createUserDto) {
-
-        UserDto createdUser = userService.createUser(createUserDto);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
     // PUT /users/{id}

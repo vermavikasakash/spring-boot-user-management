@@ -1,5 +1,6 @@
 package com.example.UserManagement.entity;
 
+import com.example.UserManagement.enums.Role;
 import jakarta.persistence.*;
 
 @Entity
@@ -8,21 +9,29 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
-    String name;
-    String email;
+    private String name;
+    private String email;
+    private String password;
+
+    @Enumerated(EnumType.STRING)
+    private Role role = Role.USER; // it's not recommended
+
 
     // NO ARGUMENT CONSTRUCTOR FOR JPA
     protected User() {
-        // Required by JPA
     }
 
-    public User(String name, String email) {
+    public User(String name, String email, String password) {
         this.name = name;
         this.email = email;
+        this.password = password;
+        this.role = Role.USER;
     }
 
+
+    // Getters and setters (Remove in future with lombok)
     public Long getId() {
         return id;
     }
@@ -45,6 +54,22 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 
 

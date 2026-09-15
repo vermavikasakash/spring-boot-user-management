@@ -5,18 +5,22 @@ import com.example.UserManagement.dto.UserDto;
 import com.example.UserManagement.entity.User;
 import com.example.UserManagement.exception.ResourceNotFoundException;
 import com.example.UserManagement.repository.UserRepository;
+
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     // Fetches all users and converts database entities into API response DTOs.
@@ -57,7 +61,9 @@ public class UserService {
     // Creates a new User entity from the incoming request DTO.
     public UserDto createUser(CreateUserDto createUserDto) {
 
-        User user = new User(createUserDto.getName(), createUserDto.getEmail());
+        String encodedPassword = passwordEncoder.encode(createUserDto.getPassword());
+
+        User user = new User(createUserDto.getName(), createUserDto.getEmail(), encodedPassword);
 
         // save() persists the entity and returns the managed/saved entity,
         // including the database-generated ID.
