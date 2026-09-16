@@ -9,18 +9,15 @@ import com.example.UserManagement.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
     }
 
     // Fetches all users and converts database entities into API response DTOs.
@@ -58,25 +55,6 @@ public class UserService {
         return new UserDto(user.getId(), user.getName(), user.getEmail());
     }
 
-    // Creates a new User entity from the incoming request DTO.
-    public UserDto createUser(CreateUserDto createUserDto) {
-
-        String encodedPassword = passwordEncoder.encode(createUserDto.getPassword());
-
-        User user = new User(createUserDto.getName(), createUserDto.getEmail(), encodedPassword);
-
-        // save() persists the entity and returns the managed/saved entity,
-        // including the database-generated ID.
-        User savedUser = userRepository.save(user);
-
-        return new UserDto(savedUser.getId(), savedUser.getName(), savedUser.getEmail());
-    }
-
-    // Get user by email id
-    public User getUserByEmail(String email) {
-
-        return userRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + email));
-    }
 
     // Replaces the existing user's data.
     @Transactional

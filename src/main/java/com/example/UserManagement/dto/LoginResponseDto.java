@@ -1,6 +1,5 @@
 package com.example.UserManagement.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 

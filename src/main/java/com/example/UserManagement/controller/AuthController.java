@@ -6,7 +6,7 @@ import com.example.UserManagement.dto.LoginResponseDto;
 import com.example.UserManagement.dto.UserDto;
 import com.example.UserManagement.entity.User;
 import com.example.UserManagement.security.JwtService;
-import com.example.UserManagement.service.UserService;
+import com.example.UserManagement.service.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,20 +23,20 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
-    private final UserService userService;
+    private final AuthService authService;
     private final JwtService jwtService;
 
-    public AuthController(AuthenticationManager authenticationManager, UserService userService, JwtService jwtService) {
+    public AuthController(AuthenticationManager authenticationManager, AuthService authService, JwtService jwtService) {
 
         this.authenticationManager = authenticationManager;
-        this.userService = userService;
+        this.authService = authService;
         this.jwtService = jwtService;
     }
 
     @PostMapping("/register")
     public ResponseEntity<UserDto> register(@RequestBody CreateUserDto dto) {
 
-        UserDto user = userService.createUser(dto);
+        UserDto user = authService.register(dto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
@@ -48,7 +48,7 @@ public class AuthController {
         UserDetails userDetails =
                 (UserDetails) authentication.getPrincipal(); // get the authenticated user
 
-        User user = userService.getUserByEmail(request.getEmail());
+        User user = authService.getUserByEmail(request.getEmail());
         String token = jwtService.generateToken(user); // generate the token
 
         return ResponseEntity.ok(new LoginResponseDto(token));
